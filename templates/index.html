@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO List App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .add-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .todo-list {
+            list-style: none;
+        }
+        .todo-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        .todo-item.completed {
+            opacity: 0.6;
+            border-left-color: #28a745;
+        }
+        .todo-item.completed .todo-title {
+            text-decoration: line-through;
+        }
+        .todo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .todo-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .todo-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-toggle {
+            background: #28a745;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+        .btn-toggle:hover {
+            background: #218838;
+        }
+        .btn-delete {
+            background: #dc3545;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+        .btn-delete:hover {
+            background: #c82333;
+        }
+        .btn-edit {
+            background: #ffc107;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .edit-form {
+            display: none;
+            background: #fff3cd;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 My TO-DO List</h1>
+        
+        <div class="add-form">
+            <form action="/add" method="POST">
+                <div class="form-group">
+                    <label for="title">Task Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        {% if todos %}
+        <ul class="todo-list">
+            {% for todo in todos %}
+            <li class="todo-item {% if todo['completed'] %}completed{% endif %}">
+                <div class="todo-title">{{ todo['title'] }}</div>
+                {% if todo['description'] %}
+                <div class="todo-description">{{ todo['description'] }}</div>
+                {% endif %}
+                <div class="todo-actions">
+                    <a href="/toggle/{{ todo['id'] }}">
+                        <button class="btn-toggle">
+                            {% if todo['completed'] %}Undo{% else %}Complete{% endif %}
+                        </button>
+                    </a>
+                    <button class="btn-edit" onclick="toggleEdit({{ todo['id'] }})">Edit</button>
+                    <a href="/delete/{{ todo['id'] }}" onclick="return confirm('Are you sure?')">
+                        <button class="btn-delete">Delete</button>
+                    </a>
+                </div>
+                
+                <div id="edit-{{ todo['id'] }}" class="edit-form">
+                    <form action="/edit/{{ todo['id'] }}" method="POST">
+                        <div class="form-group">
+                            <label>Edit Title</label>
+                            <input type="text" name="title" value="{{ todo['title'] }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Edit Description</label>
+                            <textarea name="description">{{ todo['description'] }}</textarea>
+                        </div>
+                        <button type="submit">Save Changes</button>
+                        <button type="button" onclick="toggleEdit({{ todo['id'] }})">Cancel</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty-state">
+            <p>No tasks yet! Add your first task above.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function toggleEdit(id) {
+            const editForm = document.getElementById('edit-' + id);
+            editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
