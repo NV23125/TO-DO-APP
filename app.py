@@ -4,20 +4,28 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Database setup
+# Database setup with priority field
 def init_db():
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS todos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
             description TEXT,
+            priority TEXT DEFAULT 'medium',
             completed BOOLEAN NOT NULL DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
-    conn.commit()
+    
+    # Add priority column if it doesn't exist (for migration)
+    try:
+        cursor.execute('ALTER TABLE todos ADD COLUMN priority TEXT DEFAULT "medium"')
+        conn.commit()
+    except:
+        pass  # Column already exists
+    
     conn.close()
 
 # Initialize database on startup
@@ -28,11 +36,12 @@ init_db()
 def add_todo():
     title = request.form.get('title')
     description = request.form.get('description', '')
+    priority = request.form.get('priority', 'medium')
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO todos (title, description) VALUES (?, ?)', 
-                   (title, description))
+    cursor.execute('INSERT INTO todos (title, description, priority) VALUES (?, ?, ?)', 
+                   (title, description, priority))
     conn.commit()
     conn.close()
     
@@ -41,7 +50,7 @@ def add_todo():
 # READ - Get all todos
 @app.route('/')
 def index():
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM todos ORDER BY created_at DESC')
@@ -53,7 +62,7 @@ def index():
 # UPDATE - Toggle completion status
 @app.route('/toggle/<int:todo_id>')
 def toggle_todo(todo_id):
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
     cursor.execute('UPDATE todos SET completed = NOT completed WHERE id = ?', (todo_id,))
     conn.commit()
@@ -66,11 +75,12 @@ def toggle_todo(todo_id):
 def edit_todo(todo_id):
     title = request.form.get('title')
     description = request.form.get('description', '')
+    priority = request.form.get('priority', 'medium')
     
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
-    cursor.execute('UPDATE todos SET title = ?, description = ? WHERE id = ?',
-                   (title, description, todo_id))
+    cursor.execute('UPDATE todos SET title = ?, description = ?, priority = ? WHERE id = ?',
+                   (title, description, priority, todo_id))
     conn.commit()
     conn.close()
     
@@ -79,7 +89,7 @@ def edit_todo(todo_id):
 # DELETE - Remove todo
 @app.route('/delete/<int:todo_id>')
 def delete_todo(todo_id):
-    conn = sqlite3.connect('todo.db')
+    conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
     cursor.execute('DELETE FROM todos WHERE id = ?', (todo_id,))
     conn.commit()
