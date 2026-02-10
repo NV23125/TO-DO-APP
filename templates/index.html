@@ -3,949 +3,761 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow Pro - v2.1.0</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>Tasks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Theme Variables */
-        :root[data-theme="dark"] {
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-            --secondary-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-        }
-        
-        :root[data-theme="light"] {
-            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-            --secondary-gradient: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
-            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --border-color: #e2e8f0;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
+        :root {
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #e5e5e5;
+            --gray-300: #d4d4d4;
+            --gray-400: #a3a3a3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --text-primary: #171717;
+            --text-secondary: #737373;
+            --text-tertiary: #a3a3a3;
+            --border: #e5e5e5;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-        
-        /* Animated Background - Dark Theme Only */
-        body[data-theme="dark"]::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-            z-index: -1;
-            animation: backgroundShift 20s ease infinite;
-        }
-        
-        @keyframes backgroundShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        
-        /* Navbar */
-        .navbar {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg-secondary);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Theme Toggle Button */
-        .theme-toggle {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             color: var(--text-primary);
+            font-size: 15px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
         
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .main-container {
-            max-width: 1400px;
+        /* Layout */
+        .container {
+            max-width: 720px;
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 48px 16px;
         }
         
-        /* Hero Section */
-        .hero-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
+        /* Header */
+        .header {
+            margin-bottom: 32px;
         }
         
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            animation: fadeInDown 0.8s ease;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            animation: fadeInUp 0.8s ease;
-        }
-        
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Category Filter Pills */
-        .category-filters {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .category-pill {
-            padding: 0.75rem 1.5rem;
-            border-radius: 30px;
-            border: 2px solid var(--border-color);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .category-pill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .category-pill.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: transparent;
-        }
-        
-        .category-pill.work { border-color: #6366f1; }
-        .category-pill.work.active { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-        
-        .category-pill.personal { border-color: #8b5cf6; }
-        .category-pill.personal.active { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        
-        .category-pill.shopping { border-color: #ec4899; }
-        .category-pill.shopping.active { background: linear-gradient(135deg, #ec4899, #db2777); }
-        
-        .category-pill.health { border-color: #10b981; }
-        .category-pill.health.active { background: linear-gradient(135deg, #10b981, #059669); }
-        
-        .category-pill.finance { border-color: #f59e0b; }
-        .category-pill.finance.active { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--primary-gradient);
-            transition: height 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
+        .header h1 {
+            font-size: 32px;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
         }
         
         .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 13px;
+            color: var(--text-tertiary);
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
-        /* Card Styles */
-        .custom-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+        /* Filter Pills */
+        .filters {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
         
-        /* Form Styles */
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-pill {
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+        
+        .filter-pill:hover {
+            border-color: var(--gray-300);
+            color: var(--text-primary);
+        }
+        
+        .filter-pill.active {
+            background: var(--blue-500);
+            color: white;
+            border-color: var(--blue-500);
+        }
+        
+        /* Add Task Form */
+        .add-task {
+            margin-bottom: 24px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
         .form-label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
         }
         
-        .form-control, .form-select {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+        .input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--bg-primary);
             color: var(--text-primary);
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.15s ease;
         }
         
-        .form-control:focus, .form-select:focus {
-            background: var(--bg-secondary);
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            color: var(--text-primary);
+        .input:focus {
+            outline: none;
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         
-        /* Priority Selector */
-        .priority-selector {
+        .input::placeholder {
+            color: var(--text-tertiary);
+        }
+        
+        textarea.input {
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        
+        .select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        
+        .select:focus {
+            outline: none;
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Priority Radio Buttons */
+        .priority-group {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 8px;
         }
         
         .priority-option {
             flex: 1;
         }
         
-        .priority-option input[type="radio"] {
+        .priority-option input {
             display: none;
         }
         
         .priority-label {
             display: block;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             text-align: center;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            background: var(--bg-tertiary);
+            transition: all 0.15s ease;
+            background: var(--bg-primary);
         }
         
-        .priority-option input[type="radio"]:checked + .priority-label {
+        .priority-option input:checked + .priority-label {
             border-color: currentColor;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.03);
         }
         
-        .priority-label.high { color: #ef4444; }
-        .priority-label.medium { color: #f59e0b; }
-        .priority-label.low { color: #10b981; }
+        .priority-label.high {
+            color: var(--danger);
+        }
         
-        /* Button Styles */
-        .btn-custom {
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            border: none;
+        .priority-label.medium {
+            color: var(--warning);
+        }
+        
+        .priority-label.low {
+            color: var(--success);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.9rem;
+            border: none;
+            transition: all 0.15s ease;
+            font-family: inherit;
         }
         
-        .btn-primary-gradient {
-            background: var(--primary-gradient);
+        .btn-primary {
+            background: var(--blue-500);
             color: white;
         }
         
-        .btn-primary-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        .btn-primary:hover {
+            background: var(--blue-600);
         }
         
-        /* Todo Items */
-        .todo-grid {
-            display: grid;
-            gap: 1rem;
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
         }
         
-        .todo-item {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 1.5rem;
-            position: relative;
-            transition: all 0.3s ease;
-            animation: slideIn 0.5s ease;
+        .btn-secondary:hover {
+            border-color: var(--gray-300);
+            color: var(--text-primary);
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        /* Task List */
+        .task-list {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.15s ease;
+            animation: slideIn 0.3s ease;
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .todo-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        .task-item:last-child {
+            border-bottom: none;
         }
         
-        .todo-item::before {
+        .task-item:hover {
+            background: var(--gray-50);
+        }
+        
+        .task-item.completed {
+            opacity: 0.5;
+        }
+        
+        /* Custom Checkbox */
+        .task-checkbox {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+        
+        .task-item:hover .task-checkbox {
+            border-color: var(--blue-500);
+        }
+        
+        .task-item.completed .task-checkbox {
+            background: var(--blue-500);
+            border-color: var(--blue-500);
+        }
+        
+        .task-checkbox::after {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
+            top: 3px;
+            left: 6px;
             width: 4px;
-            height: 100%;
-            border-radius: 16px 0 0 16px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
         
-        .todo-item.priority-high::before { background: var(--danger-gradient); }
-        .todo-item.priority-medium::before { background: var(--warning-gradient); }
-        .todo-item.priority-low::before { background: var(--success-gradient); }
-        
-        .todo-item.completed {
-            opacity: 0.6;
+        .task-item.completed .task-checkbox::after {
+            opacity: 1;
         }
         
-        .todo-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
+        /* Task Content */
+        .task-content {
+            flex: 1;
+            min-width: 0;
         }
         
-        .todo-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
             color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            margin-bottom: 4px;
+            word-wrap: break-word;
         }
         
-        .todo-item.completed .todo-title {
+        .task-item.completed .task-title {
             text-decoration: line-through;
             color: var(--text-secondary);
         }
         
-        .todo-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .task-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .task-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        
+        .badge-category {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        
+        .badge-priority-high {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .badge-priority-medium {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-priority-low {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .task-date {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            font-family: 'SF Mono', 'Consolas', monospace;
+        }
+        
+        /* Task Actions */
+        .task-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .todo-item.completed .todo-checkbox {
-            background: var(--secondary-gradient);
-            border-color: #06b6d4;
-        }
-        
-        .todo-description {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.6;
-            padding-left: 2rem;
-        }
-        
-        .todo-meta {
-            display: flex;
-            gap: 1.5rem;
-            padding-left: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        /* Category Badge */
-        .category-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-        
-        .category-badge.work { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
-        .category-badge.personal { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
-        .category-badge.shopping { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
-        .category-badge.health { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .category-badge.finance { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .category-badge.other { background: rgba(100, 116, 139, 0.2); color: #64748b; }
-        
-        /* Priority Badge */
-        .priority-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .priority-badge.high { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .priority-badge.medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .priority-badge.low { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        
-        .status-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .status-badge.completed { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
-        .status-badge.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        
-        /* Action Buttons */
-        .todo-actions {
-            display: flex;
-            gap: 0.5rem;
-            padding-left: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .btn-action {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: none;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: white;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            color: var(--text-secondary);
         }
         
-        .btn-complete { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .btn-complete:hover { background: var(--success-gradient); color: white; }
+        .action-btn:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+            color: var(--text-primary);
+        }
         
-        .btn-edit { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .btn-edit:hover { background: var(--warning-gradient); color: white; }
-        
-        .btn-delete { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .btn-delete:hover { background: var(--danger-gradient); color: white; }
-        
-        .btn-undo { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
-        .btn-undo:hover { background: var(--secondary-gradient); color: white; }
+        .action-btn.delete:hover {
+            border-color: var(--danger);
+            background: var(--danger);
+            color: white;
+        }
         
         /* Edit Form */
         .edit-form {
             display: none;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1rem;
+            margin-top: 12px;
+            padding: 16px;
+            background: var(--gray-50);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+        
+        .edit-form.active {
+            display: block;
         }
         
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 64px 24px;
         }
         
-        .empty-state i {
-            font-size: 5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            opacity: 0.4;
+        }
+        
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .empty-text {
+            color: var(--text-secondary);
+            font-size: 15px;
         }
         
         /* Version Badge */
-        .version-badge {
+        .version {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--primary-gradient);
-            padding: 0.75rem 1.5rem;
-            border-radius: 30px;
-            font-weight: 700;
-            color: white;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-            z-index: 1000;
+            bottom: 24px;
+            right: 24px;
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            box-shadow: var(--shadow-md);
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .priority-selector { flex-direction: column; }
-            .category-filters { justify-content: flex-start; }
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px 16px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .stats-bar {
+                flex-wrap: wrap;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .task-actions {
+                opacity: 1;
+            }
         }
     </style>
 </head>
-<body data-theme="dark">
-    <!-- Navbar -->
-    <nav class="navbar sticky-top">
-        <div class="container-fluid px-4">
-            <span class="navbar-brand">
-                <i class="bi bi-kanban"></i> TaskFlow Pro
-            </span>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="bi bi-sun-fill" id="theme-icon"></i>
-                <span id="theme-text">Light Mode</span>
-            </button>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tasks</h1>
+            <p class="header-subtitle">Stay organized and focused</p>
         </div>
-    </nav>
-
-    <div class="main-container">
-        <!-- Hero Section -->
-        <div class="hero-section">
-            <h1 class="hero-title">
-                <i class="bi bi-check2-circle"></i> TaskFlow Pro
-            </h1>
-            <p class="hero-subtitle">Professional task management with smart categories</p>
-        </div>
-
-        <!-- Category Filters -->
-        <div class="category-filters">
-            <a href="/?category=all" class="category-pill {% if current_category == 'all' %}active{% endif %}">
-                <i class="bi bi-grid"></i> All Tasks
-            </a>
-            <a href="/?category=work" class="category-pill work {% if current_category == 'work' %}active{% endif %}">
-                <i class="bi bi-briefcase"></i> Work
-            </a>
-            <a href="/?category=personal" class="category-pill personal {% if current_category == 'personal' %}active{% endif %}">
-                <i class="bi bi-person"></i> Personal
-            </a>
-            <a href="/?category=shopping" class="category-pill shopping {% if current_category == 'shopping' %}active{% endif %}">
-                <i class="bi bi-cart"></i> Shopping
-            </a>
-            <a href="/?category=health" class="category-pill health {% if current_category == 'health' %}active{% endif %}">
-                <i class="bi bi-heart-pulse"></i> Health
-            </a>
-            <a href="/?category=finance" class="category-pill finance {% if current_category == 'finance' %}active{% endif %}">
-                <i class="bi bi-currency-dollar"></i> Finance
-            </a>
-            <a href="/?category=other" class="category-pill {% if current_category == 'other' %}active{% endif %}">
-                <i class="bi bi-three-dots"></i> Other
-            </a>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.2); color: #6366f1;">
-                    <i class="bi bi-list-task"></i>
-                </div>
-                <div class="stat-number">{{ todos|length }}</div>
-                <div class="stat-label">Total Tasks</div>
+        
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">{{ todos|length }}</div>
+                <div class="stat-label">Total</div>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-                <div class="stat-number">{{ todos|selectattr('priority', 'equalto', 'high')|rejectattr('completed')|list|length }}</div>
-                <div class="stat-label">High Priority</div>
+            <div class="stat-item">
+                <div class="stat-value">{{ todos|rejectattr('completed')|list|length }}</div>
+                <div class="stat-label">Active</div>
             </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(6, 182, 212, 0.2); color: #06b6d4;">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-                <div class="stat-number">{{ todos|selectattr('completed')|list|length }}</div>
-                <div class="stat-label">Completed</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">
-                    <i class="bi bi-clock-history"></i>
-                </div>
-                <div class="stat-number">{{ todos|rejectattr('completed')|list|length }}</div>
-                <div class="stat-label">Pending</div>
+            <div class="stat-item">
+                <div class="stat-value">{{ todos|selectattr('completed')|list|length }}</div>
+                <div class="stat-label">Done</div>
             </div>
         </div>
-
-        <!-- Add Task Card -->
-        <div class="custom-card">
-            <h2 class="card-title">
-                <i class="bi bi-plus-circle"></i> Create New Task
-            </h2>
+        
+        <!-- Filters -->
+        <div class="filters">
+            <a href="/?category=all" class="filter-pill {% if current_category == 'all' %}active{% endif %}">All</a>
+            <a href="/?category=work" class="filter-pill {% if current_category == 'work' %}active{% endif %}">Work</a>
+            <a href="/?category=personal" class="filter-pill {% if current_category == 'personal' %}active{% endif %}">Personal</a>
+            <a href="/?category=shopping" class="filter-pill {% if current_category == 'shopping' %}active{% endif %}">Shopping</a>
+            <a href="/?category=health" class="filter-pill {% if current_category == 'health' %}active{% endif %}">Health</a>
+            <a href="/?category=finance" class="filter-pill {% if current_category == 'finance' %}active{% endif %}">Finance</a>
+            <a href="/?category=other" class="filter-pill {% if current_category == 'other' %}active{% endif %}">Other</a>
+        </div>
+        
+        <!-- Add Task -->
+        <div class="add-task">
             <form action="/add" method="POST">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="title" class="form-label">Task Title</label>
-                        <input type="text" class="form-control" id="title" name="title" 
-                               placeholder="Enter your task..." required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Task title</label>
+                        <input type="text" name="title" class="input" placeholder="What needs to be done?" required autofocus>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="category" class="form-label">Category</label>
-                        <select class="form-select" id="category" name="category" required>
-                            <option value="work">💼 Work</option>
-                            <option value="personal" selected>👤 Personal</option>
-                            <option value="shopping">🛒 Shopping</option>
-                            <option value="health">💚 Health</option>
-                            <option value="finance">💰 Finance</option>
-                            <option value="other">📌 Other</option>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="select">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Health</option>
+                            <option value="finance">Finance</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description (Optional)</label>
-                    <textarea class="form-control" id="description" name="description" 
-                              placeholder="Add more details about your task..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Priority Level</label>
-                    <div class="priority-selector">
-                        <div class="priority-option">
-                            <input type="radio" name="priority" value="high" id="priority-high">
-                            <label for="priority-high" class="priority-label high">
-                                <i class="bi bi-exclamation-circle-fill"></i><br>High
-                            </label>
-                        </div>
-                        <div class="priority-option">
-                            <input type="radio" name="priority" value="medium" id="priority-medium" checked>
-                            <label for="priority-medium" class="priority-label medium">
-                                <i class="bi bi-dash-circle-fill"></i><br>Medium
-                            </label>
-                        </div>
-                        <div class="priority-option">
-                            <input type="radio" name="priority" value="low" id="priority-low">
-                            <label for="priority-low" class="priority-label low">
-                                <i class="bi bi-check-circle-fill"></i><br>Low
-                            </label>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <div class="priority-group">
+                            <div class="priority-option">
+                                <input type="radio" name="priority" value="low" id="p-low">
+                                <label for="p-low" class="priority-label low">Low</label>
+                            </div>
+                            <div class="priority-option">
+                                <input type="radio" name="priority" value="medium" id="p-med" checked>
+                                <label for="p-med" class="priority-label medium">Med</label>
+                            </div>
+                            <div class="priority-option">
+                                <input type="radio" name="priority" value="high" id="p-high">
+                                <label for="p-high" class="priority-label high">High</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn-custom btn-primary-gradient">
-                    <i class="bi bi-plus-lg"></i> Add Task
-                </button>
+                
+                <div class="form-group">
+                    <label class="form-label">Description (optional)</label>
+                    <textarea name="description" class="input" placeholder="Add details..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Add Task</button>
             </form>
         </div>
-
-        <!-- Tasks List -->
-        <div class="custom-card">
-            <h2 class="card-title">
-                <i class="bi bi-list-check"></i> 
-                {% if current_category == 'all' %}
-                    Your Tasks
-                {% else %}
-                    {{ current_category|capitalize }} Tasks
-                {% endif %}
-            </h2>
-            
-            {% if todos %}
-                <div class="todo-grid">
-                    {% for todo in todos %}
-                    <div class="todo-item priority-{{ todo['priority'] or 'medium' }} {% if todo['completed'] %}completed{% endif %}">
-                        <div class="todo-header">
-                            <div class="todo-title">
-                                <a href="/toggle/{{ todo['id'] }}" style="text-decoration: none;">
-                                    <div class="todo-checkbox">
-                                        {% if todo['completed'] %}
-                                            <i class="bi bi-check-lg" style="color: white;"></i>
-                                        {% endif %}
-                                    </div>
-                                </a>
-                                <span>{{ todo['title'] }}</span>
-                            </div>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <span class="category-badge {{ todo['category'] or 'other' }}">
-                                    {% if todo['category'] == 'work' %}
-                                        <i class="bi bi-briefcase"></i> Work
-                                    {% elif todo['category'] == 'personal' %}
-                                        <i class="bi bi-person"></i> Personal
-                                    {% elif todo['category'] == 'shopping' %}
-                                        <i class="bi bi-cart"></i> Shopping
-                                    {% elif todo['category'] == 'health' %}
-                                        <i class="bi bi-heart-pulse"></i> Health
-                                    {% elif todo['category'] == 'finance' %}
-                                        <i class="bi bi-currency-dollar"></i> Finance
-                                    {% else %}
-                                        <i class="bi bi-three-dots"></i> Other
-                                    {% endif %}
-                                </span>
-                                <span class="priority-badge {{ todo['priority'] or 'medium' }}">
-                                    {% if todo['priority'] == 'high' %}
-                                        <i class="bi bi-exclamation-circle-fill"></i> High
-                                    {% elif todo['priority'] == 'low' %}
-                                        <i class="bi bi-check-circle-fill"></i> Low
-                                    {% else %}
-                                        <i class="bi bi-dash-circle-fill"></i> Medium
-                                    {% endif %}
-                                </span>
-                                <span class="status-badge {% if todo['completed'] %}completed{% else %}pending{% endif %}">
-                                    {% if todo['completed'] %}
-                                        <i class="bi bi-check-circle-fill"></i> Done
-                                    {% else %}
-                                        <i class="bi bi-clock"></i> Pending
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </div>
-                        
-                        {% if todo['description'] %}
-                        <div class="todo-description">
-                            {{ todo['description'] }}
-                        </div>
-                        {% endif %}
-                        
-                        <div class="todo-meta">
-                            <div class="meta-item">
-                                <i class="bi bi-calendar3"></i>
-                                <span>{{ todo['created_at'] }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="todo-actions">
-                            <a href="/toggle/{{ todo['id'] }}" style="text-decoration: none;">
-                                <button class="btn-action {% if todo['completed'] %}btn-undo{% else %}btn-complete{% endif %}">
-                                    <i class="bi bi-{% if todo['completed'] %}arrow-counterclockwise{% else %}check-lg{% endif %}"></i>
-                                    {% if todo['completed'] %}Undo{% else %}Complete{% endif %}
-                                </button>
-                            </a>
-                            <button class="btn-action btn-edit" onclick="toggleEdit({{ todo['id'] }})">
-                                <i class="bi bi-pencil"></i> Edit
-                            </button>
-                            <a href="/delete/{{ todo['id'] }}" 
-                               onclick="return confirm('Delete this task forever?')" 
-                               style="text-decoration: none;">
-                                <button class="btn-action btn-delete">
-                                    <i class="bi bi-trash"></i> Delete
-                                </button>
-                            </a>
-                        </div>
-
-                        <!-- Edit Form -->
-                        <div id="edit-{{ todo['id'] }}" class="edit-form">
-                            <form action="/edit/{{ todo['id'] }}" method="POST">
-                                <div class="mb-3">
-                                    <label class="form-label">Edit Title</label>
-                                    <input type="text" class="form-control" name="title" 
-                                           value="{{ todo['title'] }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Edit Description</label>
-                                    <textarea class="form-control" name="description">{{ todo['description'] }}</textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Category</label>
-                                        <select class="form-select" name="category">
-                                            <option value="work" {% if todo['category'] == 'work' %}selected{% endif %}>💼 Work</option>
-                                            <option value="personal" {% if todo['category'] == 'personal' %}selected{% endif %}>👤 Personal</option>
-                                            <option value="shopping" {% if todo['category'] == 'shopping' %}selected{% endif %}>🛒 Shopping</option>
-                                            <option value="health" {% if todo['category'] == 'health' %}selected{% endif %}>💚 Health</option>
-                                            <option value="finance" {% if todo['category'] == 'finance' %}selected{% endif %}>💰 Finance</option>
-                                            <option value="other" {% if todo['category'] == 'other' %}selected{% endif %}>📌 Other</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Priority Level</label>
-                                        <select class="form-select" name="priority">
-                                            <option value="low" {% if todo['priority'] == 'low' %}selected{% endif %}>🟢 Low</option>
-                                            <option value="medium" {% if todo['priority'] == 'medium' %}selected{% endif %}>🟡 Medium</option>
-                                            <option value="high" {% if todo['priority'] == 'high' %}selected{% endif %}>🔴 High</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn-custom btn-primary-gradient">
-                                        <i class="bi bi-check-lg"></i> Save Changes
-                                    </button>
-                                    <button type="button" class="btn-action btn-edit" onclick="toggleEdit({{ todo['id'] }})">
-                                        <i class="bi bi-x-lg"></i> Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+        
+        <!-- Task List -->
+        {% if todos %}
+        <div class="task-list">
+            {% for todo in todos %}
+            <div class="task-item {% if todo['completed'] %}completed{% endif %}">
+                <a href="/toggle/{{ todo['id'] }}" class="task-checkbox"></a>
+                
+                <div class="task-content">
+                    <div class="task-title">{{ todo['title'] }}</div>
+                    
+                    {% if todo['description'] %}
+                    <div class="task-description">{{ todo['description'] }}</div>
+                    {% endif %}
+                    
+                    <div class="task-meta">
+                        <span class="task-badge badge-category">{{ todo['category']|capitalize }}</span>
+                        <span class="task-badge badge-priority-{{ todo['priority'] or 'medium' }}">{{ todo['priority']|capitalize }}</span>
+                        <span class="task-date">{{ todo['created_at'][:10] }}</span>
                     </div>
-                    {% endfor %}
+                    
+                    <div id="edit-{{ todo['id'] }}" class="edit-form">
+                        <form action="/edit/{{ todo['id'] }}" method="POST">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <input type="text" name="title" class="input" value="{{ todo['title'] }}" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <textarea name="description" class="input">{{ todo['description'] }}</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <select name="category" class="select">
+                                        <option value="personal" {% if todo['category'] == 'personal' %}selected{% endif %}>Personal</option>
+                                        <option value="work" {% if todo['category'] == 'work' %}selected{% endif %}>Work</option>
+                                        <option value="shopping" {% if todo['category'] == 'shopping' %}selected{% endif %}>Shopping</option>
+                                        <option value="health" {% if todo['category'] == 'health' %}selected{% endif %}>Health</option>
+                                        <option value="finance" {% if todo['category'] == 'finance' %}selected{% endif %}>Finance</option>
+                                        <option value="other" {% if todo['category'] == 'other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="priority" class="select">
+                                        <option value="low" {% if todo['priority'] == 'low' %}selected{% endif %}>Low</option>
+                                        <option value="medium" {% if todo['priority'] == 'medium' %}selected{% endif %}>Medium</option>
+                                        <option value="high" {% if todo['priority'] == 'high' %}selected{% endif %}>High</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdit({{ todo['id'] }})">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            {% else %}
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <h3>No tasks found</h3>
-                    <p>
-                        {% if current_category == 'all' %}
-                            Create your first task to get started with TaskFlow Pro
-                        {% else %}
-                            No {{ current_category }} tasks yet. Create one above!
-                        {% endif %}
-                    </p>
+                
+                <div class="task-actions">
+                    <button class="action-btn" onclick="toggleEdit({{ todo['id'] }})" title="Edit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                    </button>
+                    <a href="/delete/{{ todo['id'] }}" class="action-btn delete" onclick="return confirm('Delete this task?')" title="Delete">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </a>
                 </div>
-            {% endif %}
+            </div>
+            {% endfor %}
         </div>
+        {% else %}
+        <div class="task-list">
+            <div class="empty-state">
+                <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 11l3 3L22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                <div class="empty-title">No tasks yet</div>
+                <p class="empty-text">Add your first task to get started</p>
+            </div>
+        </div>
+        {% endif %}
     </div>
-
-    <!-- Version Badge -->
-    <div class="version-badge">
-        <i class="bi bi-tag"></i> v2.1.0
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <div class="version">v4.0.0</div>
+    
     <script>
         function toggleEdit(id) {
-            const editForm = document.getElementById('edit-' + id);
-            editForm.style.display = editForm.style.display === 'none' || editForm.style.display === '' ? 'block' : 'none';
+            const form = document.getElementById('edit-' + id);
+            form.classList.toggle('active');
         }
         
-        // Theme Toggle Function
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
-            const currentTheme = body.getAttribute('data-theme');
-            
-            if (currentTheme === 'dark') {
-                body.setAttribute('data-theme', 'light');
-                document.documentElement.setAttribute('data-theme', 'light');
-                icon.className = 'bi bi-moon-fill';
-                text.textContent = 'Dark Mode';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                document.documentElement.setAttribute('data-theme', 'dark');
-                icon.className = 'bi bi-sun-fill';
-                text.textContent = 'Light Mode';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-        
-        // Load saved theme on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
-            
-            body.setAttribute('data-theme', savedTheme);
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            if (savedTheme === 'light') {
-                icon.className = 'bi bi-moon-fill';
-                text.textContent = 'Dark Mode';
-            } else {
-                icon.className = 'bi bi-sun-fill';
-                text.textContent = 'Light Mode';
+        // Keyboard shortcut: Press / to focus add task
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                e.preventDefault();
+                document.querySelector('.add-task input[name="title"]').focus();
             }
         });
     </script>

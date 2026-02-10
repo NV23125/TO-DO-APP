@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
 
-# Database setup with category field
 def init_db():
     conn = sqlite3.connect('/app/data/todo.db')
     cursor = conn.cursor()
@@ -20,19 +19,16 @@ def init_db():
         )
     ''')
     
-    # Add category column if it doesn't exist (for migration)
     try:
         cursor.execute('ALTER TABLE todos ADD COLUMN category TEXT DEFAULT "personal"')
         conn.commit()
     except:
-        pass  # Column already exists
+        pass
     
     conn.close()
 
-# Initialize database on startup
 init_db()
 
-# CREATE - Add new todo
 @app.route('/add', methods=['POST'])
 def add_todo():
     title = request.form.get('title')
@@ -49,7 +45,6 @@ def add_todo():
     
     return redirect(url_for('index'))
 
-# READ - Get all todos
 @app.route('/')
 def index():
     filter_category = request.args.get('category', 'all')
@@ -59,16 +54,15 @@ def index():
     cursor = conn.cursor()
     
     if filter_category == 'all':
-        cursor.execute('SELECT * FROM todos ORDER BY created_at DESC')
+        cursor.execute('SELECT * FROM todos ORDER BY completed ASC, created_at DESC')
     else:
-        cursor.execute('SELECT * FROM todos WHERE category = ? ORDER BY created_at DESC', (filter_category,))
+        cursor.execute('SELECT * FROM todos WHERE category = ? ORDER BY completed ASC, created_at DESC', (filter_category,))
     
     todos = cursor.fetchall()
     conn.close()
     
     return render_template('index.html', todos=todos, current_category=filter_category)
 
-# UPDATE - Toggle completion status
 @app.route('/toggle/<int:todo_id>')
 def toggle_todo(todo_id):
     conn = sqlite3.connect('/app/data/todo.db')
@@ -79,7 +73,6 @@ def toggle_todo(todo_id):
     
     return redirect(url_for('index'))
 
-# UPDATE - Edit todo
 @app.route('/edit/<int:todo_id>', methods=['POST'])
 def edit_todo(todo_id):
     title = request.form.get('title')
@@ -96,7 +89,6 @@ def edit_todo(todo_id):
     
     return redirect(url_for('index'))
 
-# DELETE - Remove todo
 @app.route('/delete/<int:todo_id>')
 def delete_todo(todo_id):
     conn = sqlite3.connect('/app/data/todo.db')
