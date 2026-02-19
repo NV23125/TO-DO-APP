@@ -14,6 +14,7 @@ RUN mkdir -p /app/data
 EXPOSE 5000
 
 ENV FLASK_APP=app.py
+ENV DB_PATH=/app/data/todos.db
 ENV PYTHONUNBUFFERED=1
 
 CMD ["python", "app.py"]
